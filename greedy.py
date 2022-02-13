@@ -4,7 +4,7 @@ def greedy_clique(G):
     M = []
 
     for i in range(len(degrees)):
-        if not M:  # if M is empty
+        if not M:
             M.append(degrees[i][0])
             continue
         c = 0
