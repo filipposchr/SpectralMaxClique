@@ -3,7 +3,7 @@ Contacts: [filippos.christodoulou@gssi.it]
 # SpectralMaxClique
 Spectral algorithm for finding maximum cliques in dense RIGs
 
-#Reproduce experiments
+# Reproduce experiments
 
 After downloading the repository do the following:
 - Install requirements: `pip install -r requirements.txt`
