@@ -3,10 +3,11 @@ import math
 import networkx as nx
 from scipy import linalg as LA
 from itertools import combinations
-import timeit
 import collections
 import random
 from random import randint
+from fractions import Fraction
+
 
 def printToFile(mlabels):
     reverse_list = map(lambda x: x[::-1], mlabels)
@@ -38,7 +39,6 @@ def printToFile(mlabels):
 def spectral_max_clique_set(G, k, c, comb_list):
     M = []
     cliques = []
-    geit = 0
     for i in range(len(comb_list)):
         z = []
         v = []
@@ -47,7 +47,7 @@ def spectral_max_clique_set(G, k, c, comb_list):
         for j in range(k):
             # Find neighbourhood
             v = [comb_list[j]]
-            neighbours = v + list(G.neighbors(comb_list[j]))#neighborhood of v and v included
+            neighbours = v + list(G.neighbors(comb_list[j]))  # neighborhood of v and v included
             z.append(neighbours)
 
         Int = list(set.intersection(*map(set, z)))
@@ -58,11 +58,10 @@ def spectral_max_clique_set(G, k, c, comb_list):
         e_values, e_vecs = LA.eig(A.todense())
         sorted_indx = sorted(range(len(e_values)), key=lambda k: e_values[k], reverse=True)
         e_values_sorted = sorted(e_values, reverse=True)
-        l_2 = e_values[sorted_indx[1]] #2nd largest eigenvalue
-        korifi_2i = Int[sorted_indx[1]]
+        l_2 = e_values[sorted_indx[1]]  # 2nd largest eigenvalue
 
         index = sorted_indx[1]
-        v_2 = e_vecs[sorted_indx[1]]#neighborhood of v and v included
+        v_2 = e_vecs[sorted_indx[1]]  # neighborhood of v and v included
         v_2 = abs(v_2)
         sorted_indx_v2 = sorted(range(len(v_2)), key=lambda k: v_2[k], reverse=True)
         v_2 = sorted(v_2, reverse=True)
@@ -72,15 +71,15 @@ def spectral_max_clique_set(G, k, c, comb_list):
 
         w = []
         w = sorted_vertices[0:c]
-        toul_geit = int(math.ceil(3 * c / 4))
+        minimum_neighbours = int(math.ceil(3 * c / 4))
         nodes = []
-        koina = []
+        common = []
         A = []
         for l in range(H.number_of_nodes()):
             A = H.neighbors(list(H.nodes())[l])
             A = list(A)
-            koina = list(set(A) & set(w))
-            if (len(koina)) >= toul_geit:
+            common = list(set(A) & set(w))
+            if (len(common)) >= minimum_neighbours:
                 if not nodes:
                     nodes.append(list(H.nodes())[l])
                 else:
@@ -103,10 +102,11 @@ def spectral_max_clique_set(G, k, c, comb_list):
     else:
         return largest_clique
 
+
 def spectral_max_clique_set_k2(G, k, c, comb_list):
     M = []
     cliques = []
-    geit = 0
+
     for i in range(len(comb_list)):
         z = []
         v = []
@@ -115,7 +115,7 @@ def spectral_max_clique_set_k2(G, k, c, comb_list):
         for j in range(k):
             # Find neighbourhood
             v = [comb_list[i][j]]
-            neighbours = v + list(G.neighbors(comb_list[i][j])) #neighborhood of v and v included
+            neighbours = v + list(G.neighbors(comb_list[i][j]))  # neighborhood of v and v included
             z.append(neighbours)
 
         Int = list(set.intersection(*map(set, z)))
@@ -125,9 +125,7 @@ def spectral_max_clique_set_k2(G, k, c, comb_list):
         A = nx.adjacency_matrix(H)
         e_values, e_vecs = LA.eig(A.todense())
         sorted_indx = sorted(range(len(e_values)), key=lambda k: e_values[k], reverse=True)
-        l_2 = e_values[sorted_indx[1]]  #2nd largest eigenvalue
-        korifi_2i = Int[sorted_indx[1]]
-
+        l_2 = e_values[sorted_indx[1]]  # 2nd largest eigenvalue
         index = sorted_indx[1]
         v_2 = e_vecs[sorted_indx[1]]
 
@@ -140,24 +138,24 @@ def spectral_max_clique_set_k2(G, k, c, comb_list):
             sorted_vertices.insert(j, Int[sorted_indx_v2[j]])
         w = []
         w = sorted_vertices[0:c]
-        toul_geit = int(math.ceil(3 * c / 4))
+        minimum_neighbours = int(math.ceil(3 * c / 4))
         nodes = []
 
-        koina = []
+        common = []
         A = []
         for l in range(H.number_of_nodes()):
             A = H.neighbors(list(H.nodes())[l])
             A = list(A)
-            koina = list(set(A) & set(w))
+            common = list(set(A) & set(w))
 
-            if (len(koina)) >= toul_geit:
+            if (len(common)) >= minimum_neighbours:
                 if not nodes:
                     nodes.append(list(H.nodes())[l])
                 else:
                     count = 0
                     for nn in nodes:
-                        if (H.has_edge(nn, list(H.nodes())[l]) == True):
-                            count = count + 1 #counting neighbours
+                        if H.has_edge(nn, list(H.nodes())[l]) == True:
+                            count = count + 1  # counting neighbours
                     if count >= (len(nodes)):
                         nodes.append(list(H.nodes())[l])
 
@@ -176,12 +174,11 @@ def spectral_max_clique_set_k2(G, k, c, comb_list):
     else:
         return largest_clique
 
+
 def maximum_clique_set(G, k, comb_list):
     M = []
     cliques = []
-    geit = 0
     L = []
-    ll = []
     iter = 0
     z = []
     v = []
@@ -195,15 +192,8 @@ def maximum_clique_set(G, k, comb_list):
     else:
         v = comb_list
         a = list(G.neighbors(comb_list))
-    neighbours = [v] + a  #neighborhood of v and v included
+    neighbours = [v] + a  # neighborhood of v and v included
     z.append(neighbours)
-
-    for prosk_v in G.neighbors(v):
-        geitonikes_v = []
-        geitonikes_v = [prosk_v] + list(G.neighbors(prosk_v))
-
-        if set(geitonikes_v) == set(neighbours):
-            ll.append(prosk_v)
     Int = list(set.intersection(*map(set, z)))
 
     if not Int:
@@ -233,7 +223,7 @@ def maximum_clique_set(G, k, comb_list):
     Y = []
     M = []
     count = 0
-    
+
     if k > 1:
         for i in range(len(L)):
             perm = []
@@ -249,7 +239,7 @@ def maximum_clique_set(G, k, comb_list):
                     M.append(L[i])
                     break
         if not M:
-            print("No Cliques Found.")
+            M_ = []
         else:
             count = 0
             for i in range(len(M)):
@@ -258,8 +248,7 @@ def maximum_clique_set(G, k, comb_list):
             M_ = sorted(M, key=len, reverse=True)
             return M_[0]
     else:
-        if not L:
-            print("No Cliques Found.")
+        if not L: #no cliques found
             L = []
             return L
         else:
@@ -322,7 +311,7 @@ def maximum_clique_setk2(G, k, comb_list):
         return M_[0]
 
 
-def give_set(G, k, t, file_clique, RANDOM_COMBINATIONS):
+def give_set_spectral(G, k, t, file_clique, RANDOM_COMBINATIONS):
     found_clique = 0
     if k == 1:
         for i in range(len(file_clique[1])):
@@ -360,7 +349,8 @@ def give_set(G, k, t, file_clique, RANDOM_COMBINATIONS):
             else:
                 counter = counter + 1
 
-def give_set_featureFind(G,p, k, file_clique):
+
+def give_set_max_clique(G, p, k, file_clique):
     found_clique = 0
     RANDOM_COMBINATIONS = 20
     if k == 1:
@@ -387,7 +377,7 @@ def give_set_featureFind(G,p, k, file_clique):
         for comb_list in combinations(file_clique[1], k):
             if x_i > RANDOM_COMBINATIONS:
                 break
-            if (counter == x[x_i]):
+            if counter == x[x_i]:
                 x_i += 1
                 for i in comb_list:
                     largest_clique = maximum_clique_setk2(G, k, comb_list)
@@ -401,225 +391,95 @@ def give_set_featureFind(G,p, k, file_clique):
             else:
                 counter = counter + 1
 
+def plot_experiments(n, a, k, count_spectral_false, count_max_clique_false, probability_vector):
+    plt.close()
+    plt.xlabel('p')
+    plt.ylabel('Failure Probability')
+    if a == 1/3:
+        plt.title('n={}, a=1/3, k={}'.format(n, k))
+    elif a == 2/3:
+        plt.title('n={}, a=2/3, k={}'.format(n, k))
+    else:
+        plt.title('n={}, a=1, k={}'.format(n, k))
 
-def run_spectral_tests():
+    plt.plot(probability_vector, count_spectral_false, "-r", label="Spectral-Max-Clique")
+    plt.plot(probability_vector, count_max_clique_false, "-b", label="Maximum-Clique")
+    plt.grid(True, color="grey", linewidth="0.5", linestyle="-.", label=True)
+    plt.legend()
+    plt.savefig("a{}k{}.png".format("%.2f" % a, k), dpi=300)
+    
+    
+def run_tests(n, a, k, probabilities):
+    m = math.floor(n ** a)
+    experiment_count = 100 #times each experiment will be executed (e.g 100 to get a percentage)
+
+    percentage_list_spectral = []
+    percentage_list_max_clique = []
     RANDOM_COMBINATIONS = 20
-    text_file = open("expirements_Spectral_Max_Clique.txt", "a")
-    text_file.write("\nn=" + str(n) + ", a=" + str(a) + ", k=" + str(k) + ", pinakas_pith =" + str(pinakas_pith2) + "\n")
-    for pith in pinakas_pith:
-        pith_lathous_alon = []
-        swsta_alon = 0
 
-        for i in range(0,20):
-            pos = [pith] * m
-            pithan.append(pith)
-            t = int(n * pith)
+    spectral_max_file = open("experiments_Spectral_Max_Clique.txt", "a")
+    spectral_max_file.write(
+        "\nn=" + str(n) + ", a=" + str(a) + ", k=" + str(k) + ", Probability Vector =" + str(probabilities) + "\n")
+    spectral_max_file.write("\n")
+
+    maximum_clique_file = open("experiments_Maximum_Clique.txt", "a")
+    maximum_clique_file.write(
+        "n=" + str(n) + ", a=" + str(a) + ", k=" + str(k) + ", Probability Vector =" + str(probabilities) + "\n")
+    maximum_clique_file.write("\n")
+
+    for prob in probabilities:
+        false_prob_spectral = []
+        true_spectral = 0
+        false_spectral = 0
+
+        flag_max_clique = False
+        false_prob_max_clique = []
+        true_max_clique = 0
+        false_max_clique = 0
+
+        for i in range(0, experiment_count):
+            pos = [prob] * m
+            t = int(n * prob)
             mlabels, G = nx.general_random_intersection_graph(n, m, pos)
             file_clique = printToFile(mlabels)
-            found_or_not = give_set(G, k, t, file_clique, RANDOM_COMBINATIONS)
+            found_or_not = give_set_spectral(G, k, t, file_clique, RANDOM_COMBINATIONS)
 
             if found_or_not == 1:
-                swsta_alon = swsta_alon + 1
-                flag_alon = True
+                true_spectral += 1
+                flag_spectral = True
             elif found_or_not == 0:
-                flag_alon = False
-
-            pith_lathous_alon.append(flag_alon)
-        text_file.write("p= " + str(pith) + " pith_lathous: " + str(pith_lathous_alon) + "\n")
-        text_file.write("swsta alon : " + str(swsta_alon) + "\n")
-
-    text_file.write("\n")
-
-def run_featurefind_tests():
-    RANDOM_COMBINATIONS = 20
-    text_file = open("expirements_Maximum_Clique.txt", "a")
-    text_file.write("n=" + str(n) + ", a=" + str(a) + ", k=" + str(k) + ", pinakas_pith =" + str(pinakas_pith2) + "\n")
-    for pith in pinakas_pith:
-        flag_featurefind = False
-        pith_lathous_featurefind = []
-        swsta_featurefind = 0
-
-        for i in range(0, 20):
-            pos = [pith] * m
-            pithan.append(pith)
-            t = int(n * pith)
-
-            mlabels, G = nx.general_random_intersection_graph(n, m, pos)
-            file_clique = printToFile(mlabels)
-            if k == 1:
-                r = give_set_featureFind(G, pith, k, file_clique)
-            else:
-                r = give_set_featureFind(G, pith, k, file_clique)
+                flag_spectral = False
+                false_spectral += 1
 
             if k == 1:
-                print("File clique: ", file_clique[1])
-                print("r: " ,r)
-                print("File clique: ", sorted(file_clique[1]))
+                r = give_set_max_clique(G, prob, k, file_clique)
+            else:
+                r = give_set_max_clique(G, prob, k, file_clique)
+
+            if k == 1:
                 if r == 1:
-                    swsta_featurefind = swsta_featurefind + 1
-                    flag_featurefind = True
+                    true_max_clique += 1
+                    flag_max_clique = True
                 else:
-                    flag_featurefind = False
+                    flag_max_clique = False
+                    false_max_clique += 1
             else:
                 if r == 1:
-                    swsta_featurefind = swsta_featurefind + 1
-                    flag_featurefind = True
+                    true_max_clique += 1
+                    flag_max_clique = True
                 else:
-                    flag_featurefind = False
-            print("flag: ", flag_featurefind)
-            pith_lathous_featurefind.append(flag_featurefind)
+                    flag_max_clique = False
+                    false_max_clique += 1
 
-        text_file.write("p= " + str(pith) + " pith_lathous: " + str(pith_lathous_featurefind) + "\n")
-        text_file.write("swsta ff : " + str(swsta_featurefind) + "\n")
-    text_file.write("\n")
+            false_prob_max_clique.append(flag_max_clique)
+            false_prob_spectral.append(flag_spectral)
 
-"""
-"""
+        spectral_max_file.write("p= " + str(prob) + " Failure Percentage: " + str(false_spectral) + "\n")
+        maximum_clique_file.write("p= " + str(prob) + "Failure Percentage: " + str(false_max_clique) + "\n")
+        spectral_max_file.write("\n")
+        maximum_clique_file.write("\n")
 
-n = 1000
-a = 1/3
-k = 5
-m = math.floor(n ** a)
+        percentage_list_spectral.append(false_spectral)
+        percentage_list_max_clique.append(false_max_clique)
 
-
-pinakas_pith = [0.23, 0.25, 0.28, 0.3]
-pinakas_pith2 =[0.23, 0.25, 0.28, 0.3]
-pithan = []
-
-run_spectral_tests()
-run_featurefind_tests()
-
-"""
-"""
-"""
-pos = [pinakas_pith[0]] * m
-mlabels, G = nx.general_random_intersection_graph(n, m, pos )
-c = int(n * pinakas_pith[0])
-
-spectral_max_clique(G,k,c)
-larg_cliq = printToFile(mlabels)
-print(larg_cliq)
-
-#show_n_m()
-#plt.subplot(111)
-#plt.text(0, 0, 'n= ' + str(n) + ',m= ' + str(m) + ',a= ' + str(a  + ",p= " + str(p), fontsize=13, color='red',  transform=plt.gcf().transFigure)
-#plt.show() 
-
-"""
-"""
-pith = [0.008, 0.009, 0.01, 0.011, 0.0115, 0.012, 0.0125, 0.013, 0.0135, 0.014, 0.015, 0.016, 0.0165, 0.017, 0.0175,
-        0.018, 0.019, 0.02]
-ff = [0, 6, 4, 18, 27, 40, 62, 76, 74, 92, 100, 100, 100, 100, 100, 100, 100, 100]
-alon = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 21, 43, 62, 84, 86, 100, 100]
-
-plt.xlabel('p')
-plt.ylabel('Failure Probability')
-plt.title('n=3000, a=1, k=8')
-plt.plot(pith, alon , "-r", label="Spectral-Max-Clique")
-plt.plot(pith, ff, "-b", label="Maximum-Clique")
-plt.grid(True, color = "grey", linewidth = "0.5", linestyle = "-.", label=True)
-plt.legend()
-plt.savefig("a1k8.png", dpi=300)
-"""
-"""
-# print("Length Largest Clique Alon found: ", len_clique_alon)
-# counter = 1
-
-
-for i in range(0,100):
-    flag = True
-    mlabels, G = nx.general_random_intersection_graph(n, m, pos)
-    ss1 = timeit.default_timer()
-    #a = spectral_max_clique(G,1,3* int(avg_clique_size))
-    #a = greedy_clique(G)
-    #a = featureFind3(G,n,p,k)
-    a = mono_clique(G)
-    ss2 = timeit.default_timer()
-    b = printToFile(mlabels)
-    rr = ss2 - ss1
-    #print(rr)
-    time = time + rr
-    if a != b:
-        times.append(0)
-        flag = False
-    else:
-        times.append(1)
-    print(flag)
-    #print(counter)
-    #counter = counter + 1
-
-#print("counter :" , counter)
-#print("Xronos ektelesis: ", time / 100)
-#print("Ta 0 einai: ", times.count(0))
-
-#larg_cliq = printToFile(mlabels)
-#avg_clique_size = int(n * p)
-#spectral_max_clique(G,2,avg_clique_size)
-#marked_featureFind(G,n,p,1)
-#greedy_clique(G)
-#mono_clique(G)
-#greedy_clique_opt(G)
-
-#Add planted clique
-#clique_nodes = list(range(200, 227))
-#combina = list(combinations(clique_nodes, 2))
-#print("Combina: ", list(combina))
-#G.add_edges_from(list(combina))
-
-#print("(Node, Label): ", mlabels)
-
-plt.subplot(111)
-
-#show_n_only_with_edges()
-#show_n_m()
-#show_n()
-
-#plt.savefig("1.png")
-plt.text(0, 0, 'n= ' + str(n) + ',m= ' + str(m) + ',a= ' + str(a) + ",p= " + str(p), fontsize=13, color='red',  transform=plt.gcf().transFigure)
-plt.show()
-
-pith_lathous = list()
-pithan = list()
-a = 1
-times = []
-n = 100
-m = math.floor(n ** a)
-e = 0.01
-p = 0.02
-
-for o in range(0,1):
-    pos = [p] * m
-    mlabels, G = nx.general_random_intersection_graph(n, m, pos)
-    times = []
-    print("P: ", p)
-    pithan.append(p)
-
-    for i in range(0,10):
-
-        flag = True
-        mlabels, G = nx.general_random_intersection_graph(n, m, pos)
-        ss1 = timeit.default_timer()
-        #a = spectral_max_clique(G,1,3* int(avg_clique_size))
-        #a = greedy_clique(G)
-        #a = featureFind3(G,n,p,k)
-        a = mono_clique(G)
-        ss2 = timeit.default_timer()
-        b = printToFile(mlabels)
-
-        if a != b:
-            times.append(0)
-            flag = False
-        else:
-            times.append(1)
-        print(flag)
-
-    print("**********************", times.count(0))
-    pith_lathous.append(times.count(0))
-    p = p + e
-
-
-plt.xlabel('p')
-plt.ylabel('%Λάθους')
-plt.title('Maximum-Clique')
-plt.plot(pithan, pith_lathous, "-r", label="α = 1/3")
-"""
+    plot_experiments(n, a, k, percentage_list_spectral, percentage_list_max_clique, probabilities)
