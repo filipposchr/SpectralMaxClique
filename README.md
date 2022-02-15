@@ -1,3 +1,6 @@
+Code associated with the paper: F. Christodoulou, S. Nikoletseas, C. Raptopoulos, P. Spirakis, "A spectral algorithm for finding maximum cliques
+in dense random intersection graphs".
+
 Contacts: <filippos.christodoulou@gssi.it>
 
 # SpectralMaxClique
