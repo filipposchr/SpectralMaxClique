@@ -1,5 +1,6 @@
 #Edit general_random_intersection_graph function of Networkx package, in order to be able to get the chosen labels of each node.
-#File in package in networkx -> generators -> intersection.py
+#Package file in networkx -> generators -> intersection.py
+
 """
 Generators for random intersection graphs.
 """
