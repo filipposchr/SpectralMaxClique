@@ -7,5 +7,5 @@ Spectral algorithm for finding maximum cliques in dense RIGs
 
 After downloading the repository do the following:
 - Install requirements: `pip install -r requirements.txt`
-- Change intersections.py file in networkx package with `intersections.py` (instructions in `intersections.py`) 
+- Change intersection.py file of networkx with `intersection.py` (see details in the file) 
 - Run the following: `python tests.py`
