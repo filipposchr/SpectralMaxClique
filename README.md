@@ -1,4 +1,4 @@
-Contacts: (mailto:filippos.christodoulou@gssi.it)
+Contacts: <filippos.christodoulou@gssi.it>
 
 # SpectralMaxClique
 Spectral algorithm for finding maximum cliques in dense RIGs
