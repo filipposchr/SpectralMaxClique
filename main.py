@@ -311,7 +311,7 @@ def maximum_clique_setk2(G, k, comb_list):
         return M_[0]
 
 
-def give_set_spectral(G, k, t, file_clique, RANDOM_COMBINATIONS):
+def give_set_spectral(G, k, t, file_clique, r_comb):
     found_clique = 0
     if k == 1:
         for i in range(len(file_clique[1])):
@@ -326,13 +326,13 @@ def give_set_spectral(G, k, t, file_clique, RANDOM_COMBINATIONS):
             return found_clique
     else:
         total_combinations = math.comb(len(file_clique[1]), k)
-        x = [randint(1, total_combinations) for p in range(0, RANDOM_COMBINATIONS)]
+        x = [randint(1, total_combinations) for p in range(0, r_comb)]
         x = sorted(x)
-        step = int(math.ceil(total_combinations / RANDOM_COMBINATIONS))
+        step = int(math.ceil(total_combinations / r_comb))
         counter = 1
         x_i = 0
         for comb_list in combinations(file_clique[1], k):
-            if x_i > RANDOM_COMBINATIONS:
+            if x_i > r_comb:
                 break
             if (counter == x[x_i]):
                 x_i += 1
@@ -352,10 +352,10 @@ def give_set_spectral(G, k, t, file_clique, RANDOM_COMBINATIONS):
 
 def give_set_max_clique(G, p, k, file_clique):
     found_clique = 0
-    RANDOM_COMBINATIONS = 20
+    r_comb = 20
     if k == 1:
         total_combinations = math.comb(len(file_clique[1]), k)
-        x = [randint(1, total_combinations) for p in range(0, RANDOM_COMBINATIONS)]
+        x = [randint(1, total_combinations) for p in range(0, r_comb)]
         x = sorted(x)
         counter = 1
         x_i = 0
@@ -370,12 +370,12 @@ def give_set_max_clique(G, p, k, file_clique):
             return found_clique
     else:
         total_combinations = math.comb(len(file_clique[1]), k)
-        x = [randint(1, total_combinations) for p in range(0, RANDOM_COMBINATIONS)]
+        x = [randint(1, total_combinations) for p in range(0, r_comb)]
         x = sorted(x)
         counter = 1
         x_i = 0
         for comb_list in combinations(file_clique[1], k):
-            if x_i > RANDOM_COMBINATIONS:
+            if x_i > r_comb:
                 break
             if counter == x[x_i]:
                 x_i += 1
@@ -415,7 +415,7 @@ def run_tests(n, a, k, probabilities):
 
     percentage_list_spectral = []
     percentage_list_max_clique = []
-    RANDOM_COMBINATIONS = 20
+    r_comb = 20
 
     spectral_max_file = open("experiments_Spectral_Max_Clique.txt", "a")
     spectral_max_file.write(
@@ -442,7 +442,7 @@ def run_tests(n, a, k, probabilities):
             t = int(n * prob)
             mlabels, G = nx.general_random_intersection_graph(n, m, pos)
             file_clique = printToFile(mlabels)
-            found_or_not = give_set_spectral(G, k, t, file_clique, RANDOM_COMBINATIONS)
+            found_or_not = give_set_spectral(G, k, t, file_clique, r_comb)
 
             if found_or_not == 1:
                 true_spectral += 1
