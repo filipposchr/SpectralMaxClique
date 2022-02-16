@@ -8,7 +8,8 @@ import random
 from random import randint
 from fractions import Fraction
 
-
+#Store the maximum clique of the graph in the file (knowing the selection of labels for each node), 
+#without giving it to the algorithms but to check if the output of the algorithms is correct
 def printToFile(mlabels):
     reverse_list = map(lambda x: x[::-1], mlabels)
     result = {}
