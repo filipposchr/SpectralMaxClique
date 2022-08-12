@@ -528,8 +528,7 @@ def run_tests(n, a, k, probabilities):
     max_fraction_list = []
     fractions_list = []
     m = math.floor(n ** a)
-    experiment_count = 2 #times each experiment will be executed (e.g 100 to get a percentage)
-
+    experiment_count = 1000 #times each experiment will be executed
     percentage_list_spectral = []
     percentage_list_max_clique = []
     RANDOM_COMBINATIONS = 20
